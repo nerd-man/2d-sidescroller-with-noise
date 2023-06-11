@@ -50,7 +50,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode(WINDOWSIZE)
 display = pygame.Surface((256, 200))
 
-grey = pygame.image.load('images/man/Man.png')
+grey = pygame.image.load('images/man/Manrep2.png')
 pwidth, pheight = grey.get_width(), grey.get_height()
 player_rect = pygame.Rect(0, 0, pwidth, pheight)
 
@@ -138,12 +138,10 @@ while True:
     y = (pos[1]+(scroll[1]*2)) // (TILESIZE*2)
     if 0 <= x < 64 and 0 <= y < 64:
         if pygame.mouse.get_pressed()[0]:
-            if map[y][x] not in no_collide:
-                if map[y][x] != '1':
+            if map[y][x] != '1':
                     map[y][x] = '1'
         elif pygame.mouse.get_pressed()[2]:
-            if map[y][x] not in no_collide:
-                map[y][x] = '0'
+            map[y][x] = '0'
 
     surf = pygame.transform.scale(display, WINDOWSIZE)
     screen.blit(surf, (0,0))
