@@ -58,6 +58,7 @@ bg_objects = [[0.5, [120, 100, 90, 300]], [0.25, [150, 130, 70, 230]], [0.125, [
 
 grass = pygame.image.load('images/tiles/grassBlock.png')
 dirt = pygame.image.load('images/tiles/dirtBlock.png')
+dirtb = pygame.image.load('images/tiles/dirtBack.png')
 water = pygame.image.load('images/tiles/waterBlock.png')
 
 TILESIZE = 16
@@ -66,7 +67,7 @@ moving_left = False
 moving_right = False
 playery_momentum = 0
 
-no_collide = ['0', '3', '4']
+no_collide = ['0', '3', '4', '5']
 
 true_scroll = [0, 0]
 
@@ -96,6 +97,11 @@ while True:
             pygame.draw.rect(display, (56, 144, 32), obj_rect)
         if bg_object[0] == 0.125:
             pygame.draw.rect(display, (200, 215, 230), obj_rect)
+    
+    for y, row in enumerate(map):
+        for x, tile in enumerate(row):
+            if tile == '5':
+                display.blit(dirtb, (x*TILESIZE-scroll[0], y*TILESIZE-scroll[1]))
 
     display.blit(grey, (player_rect.x-scroll[0], player_rect.y-scroll[1]))
 

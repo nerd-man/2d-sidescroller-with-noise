@@ -4,7 +4,7 @@ from pygame.constants import *
 # Constants
 WINDOWSIZE = (512, 400)
 TILESIZE = 16
-ROWS = COLS = 32
+ROWS = COLS = 64
 
 def save_map(path):
     with open(path + '.txt', 'w') as f:
@@ -16,9 +16,10 @@ def save_map(path):
 def load_map(path):
     with open(path + '.txt', 'r') as f:
         data = f.read().splitlines()
-    game_map = []
-    for row in data:
-        game_map.append(list(row))
+    game_map = map
+    for y, row in enumerate(data):
+        for x, col in enumerate(row):
+            game_map[y][x] = col
     return game_map
 
 pygame.init()
@@ -31,6 +32,7 @@ clock = pygame.time.Clock()
 # Load images
 grass = pygame.image.load('images/tiles/grassBlock.png')
 dirt = pygame.image.load('images/tiles/dirtBlock.png')
+dirtb = pygame.image.load('images/tiles/dirtBack.png')
 water = pygame.image.load('images/tiles/waterBlock.png')
 player = pygame.image.load('images/man/Man.png')
 
@@ -57,6 +59,8 @@ while True:
                 display.blit(water, (x*TILESIZE-scroll[0], y*TILESIZE-scroll[1]))
             if tile == '4':
                 display.blit(player, (x*TILESIZE-scroll[0], y*TILESIZE-scroll[1]))
+            if tile == '5':
+                display.blit(dirtb, (x*TILESIZE-scroll[0], y*TILESIZE-scroll[1]))
 
     if tiletype == '1':
         display.blit(grass, (0, 0))
@@ -66,13 +70,15 @@ while True:
         display.blit(water, (0, 0))
     if tiletype == '4':
         display.blit(player, (0, 0))
+    if tiletype == '5':
+        display.blit(dirtb, (0, 0))
 
     pos = pygame.mouse.get_pos()
     x = (pos[0]+(scroll[0]*2)) // (TILESIZE*2)
     y = (pos[1]+(scroll[1]*2)) // (TILESIZE*2)
 
     if pygame.mouse.get_pressed()[0]:
-        if 0 <= x < 32 and 0 <= y < 32:
+        if 0 <= x < COLS and 0 <= y < ROWS:
             if map[y][x] != tiletype:
                 map[y][x] = tiletype
     elif pygame.mouse.get_pressed()[2]:
@@ -109,13 +115,13 @@ while True:
             if event.key == K_SPACE:
                 map = load_map('my_map')
             if event.key == K_w:
-                scrolling[1] = -1
+                scrolling[1] = -5
             if event.key == K_a:
-                scrolling[0] = -1
+                scrolling[0] = -5
             if event.key == K_s:
-                scrolling[1] = 1
+                scrolling[1] = 5
             if event.key == K_d:
-                scrolling[0] = 1
+                scrolling[0] = 5
 
         if event.type == KEYUP:
             if event.key == K_w or event.key == K_s:
