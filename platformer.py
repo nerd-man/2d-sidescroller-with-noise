@@ -136,13 +136,14 @@ while True:
     pos = pygame.mouse.get_pos()
     x = (pos[0]+(scroll[0]*2)) // (TILESIZE*2)
     y = (pos[1]+(scroll[1]*2)) // (TILESIZE*2)
-
-    if pygame.mouse.get_pressed()[0]:
-        if 0 <= x < 64 and 0 <= y < 64:
-            if map[y][x] != '1':
-                map[y][x] = '1'
-    elif pygame.mouse.get_pressed()[2]:
-        map[y][x] = '0'
+    if 0 <= x < 64 and 0 <= y < 64:
+        if pygame.mouse.get_pressed()[0]:
+            if map[y][x] not in no_collide:
+                if map[y][x] != '1':
+                    map[y][x] = '1'
+        elif pygame.mouse.get_pressed()[2]:
+            if map[y][x] not in no_collide:
+                map[y][x] = '0'
 
     surf = pygame.transform.scale(display, WINDOWSIZE)
     screen.blit(surf, (0,0))
