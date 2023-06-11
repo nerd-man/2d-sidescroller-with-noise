@@ -13,6 +13,14 @@ def save_map(path):
                 f.write(col)
             f.write('\n')
 
+def load_map(path):
+    with open(path + '.txt', 'r') as f:
+        data = f.read().splitlines()
+    game_map = []
+    for row in data:
+        game_map.append(list(row))
+    return game_map
+
 pygame.init()
 
 screen = pygame.display.set_mode(WINDOWSIZE)
@@ -64,7 +72,7 @@ while True:
     y = (pos[1]+(scroll[1]*2)) // (TILESIZE*2)
 
     if pygame.mouse.get_pressed()[0]:
-        if 0 < x < 32 and 0 < y < 32:
+        if 0 <= x < 32 and 0 <= y < 32:
             if map[y][x] != tiletype:
                 map[y][x] = tiletype
     elif pygame.mouse.get_pressed()[2]:
@@ -98,6 +106,8 @@ while True:
             if event.key == K_RIGHT:
                 inttile += 1
                 tiletype = str(inttile)
+            if event.key == K_SPACE:
+                map = load_map('my_map')
             if event.key == K_w:
                 scrolling[1] = -1
             if event.key == K_a:
