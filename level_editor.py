@@ -77,12 +77,13 @@ while True:
     x = (pos[0]+(scroll[0]*2)) // (TILESIZE*2)
     y = (pos[1]+(scroll[1]*2)) // (TILESIZE*2)
 
-    if pygame.mouse.get_pressed()[0]:
-        if 0 <= x < COLS and 0 <= y < ROWS:
+    if 0 <= x < COLS and 0 <= y < ROWS:
+        if pygame.mouse.get_pressed()[0]:
+        
             if map[y][x] != tiletype:
                 map[y][x] = tiletype
-    elif pygame.mouse.get_pressed()[2]:
-        map[y][x] = '0'
+        elif pygame.mouse.get_pressed()[2]:
+            map[y][x] = '0'
     
     if 0 < scroll[0]:
         if scroll[0] <= ROWS*TILESIZE-200:
