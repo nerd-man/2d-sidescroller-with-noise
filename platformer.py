@@ -43,15 +43,26 @@ def generate_chunks(x, y):
             target_y = y * CHUNK_SIZE + y_pos
             tile_type = 0
             height = int(noise.pnoise1(target_x * 0.05, repeat=9999) * 5)
+            height2 = int(noise.pnoise1(target_x *0.1, repeat=9999) * 5)
+            newheight = height + height2
 
             # Dirt
-            if target_y > 8 - height:
+            if target_y > 8 - newheight:
                 tile_type = 2
             # Grass
-            elif target_y == 8 - height:
+            elif target_y == 8 - newheight:
                 tile_type = 1
+            
             # Water
-            elif target_y == 8 - height - 1:
+            # elif  target_y + 2 > 8 - newheight > 10:
+            #     tile_type = 4
+            # elif  target_y + 2 > 7 - newheight > 10:
+            #     tile_type = 4
+            elif 5 < target_y < 8 - newheight > 6:
+                tile_type = 4
+
+            # Tall grass
+            elif target_y == 8 - newheight - 1:
                 if random.randint(1, 5) == 1:
                     tile_type = 3
             
@@ -81,12 +92,14 @@ bg_objects = [[0.5, [120, 100, 90, 300]], [0.25, [150, 130, 70, 230]], [0.125, [
 grass = pygame.image.load('images/tiles/grassBlock.png')
 dirt = pygame.image.load('images/tiles/dirtBlock.png')
 dirtb = pygame.image.load('images/tiles/dirtBack.png')
-water = pygame.image.load('images/tiles/waterBlock.png')
+tallgrass = pygame.image.load('images/tiles/tallGrass.png')
+water = pygame.image.load('images/tiles/Water.png')
 
 tile_index = {
     1:grass,
     2:dirt,
-    3:water
+    3:tallgrass,
+    4:water
 }
 
 TILESIZE = 16
@@ -108,7 +121,7 @@ while True:
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
 
-    pygame.draw.rect(display, (21, 50, 12), pygame.Rect(0, 128, 256, 128))
+    pygame.draw.rect(display, (21, 50, 12), pygame.Rect(0, 100, 300, 100))
 
     for bg_object in bg_objects:
         obj_rect = pygame.Rect(bg_object[1][0]-scroll[0]*bg_object[0], bg_object[1][1]-scroll[1]*bg_object[0], bg_object[1][2], bg_object[1][3])
@@ -167,6 +180,8 @@ while True:
             if event.key == K_SPACE:
                 if collisions['bottom']:
                     playery_momentum = -5
+            if event.key == K_r:
+                player_rect.bottomleft = (0, 0)
         
         elif event.type == KEYUP:
             if event.key == K_a:
