@@ -58,7 +58,7 @@ def generate_chunks(x, y):
             #     tile_type = 4
             # elif  target_y + 2 > 7 - newheight > 10:
             #     tile_type = 4
-            elif 5 < target_y < 8 - newheight > 6:
+            elif 7 < target_y < 8 - newheight > 8:
                 tile_type = 4
 
             # Tall grass
