@@ -42,7 +42,7 @@ def generate_chunks(x, y):
             target_x = x * CHUNK_SIZE + x_pos
             target_y = y * CHUNK_SIZE + y_pos
             tile_type = 0
-            height = int(noise.pnoise1(target_x * 0.1, repeat=999) * 5)
+            height = int(noise.pnoise1(target_x * 0.05, repeat=9999) * 5)
 
             # Dirt
             if target_y > 8 - height:
@@ -61,7 +61,7 @@ def generate_chunks(x, y):
 
 
 WINDOWSIZE = (600, 400)
-HALFWINDOW = 128
+HALFWINDOW = 150
 
 CHUNK_SIZE = 8
 
@@ -95,8 +95,6 @@ moving_left = False
 moving_right = False
 playery_momentum = 0
 
-no_collide = ['0', '3', '4', '5']
-
 true_scroll = [0, 0]
 
 map = {}
@@ -125,7 +123,7 @@ while True:
 
     tile_rects = []
     #render tiles
-    for y in range(3):
+    for y in range(4):
         for x in range(4):
             target_x = x -1  + int(round(scroll[0]/(CHUNK_SIZE*16)))
             target_y = y -1 + int(scroll[1]/(CHUNK_SIZE*16))
