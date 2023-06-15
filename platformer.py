@@ -42,25 +42,19 @@ def generate_chunks(x, y):
             target_x = x * CHUNK_SIZE + x_pos
             target_y = y * CHUNK_SIZE + y_pos
             tile_type = 0
-            height = int(noise.pnoise1(target_x * 0.05) * 5)
-            height2 = int(noise.pnoise1(target_x *0.1) * 5)
-            newheight = height + height2
-
+            height = int(noise.pnoise1(target_x * 0.05, repeat=9999) * 5)
+            height2 = int(noise.pnoise1(target_x *0.1, repeat=9999) * 5)
+            height3 = int(noise.pnoise1(target_x *0.01, repeat=9999) * 5)
+            newheight = height + height2 + height3
             # Dirt
             if target_y > 8 - newheight:
                 tile_type = 2
             # Grass
             elif target_y == 8 - newheight:
                 tile_type = 1
-            
             # Water
-            # elif  target_y + 2 > 8 - newheight > 10:
-            #     tile_type = 4
-            # elif  target_y + 2 > 7 - newheight > 10:
-            #     tile_type = 4
             elif 7 < target_y < 8 - newheight > 8:
                 tile_type = 4
-
             # Tall grass
             elif target_y == 8 - newheight - 1:
                 if random.randint(1, 5) == 1:
@@ -70,6 +64,10 @@ def generate_chunks(x, y):
                 chunk_data.append([[target_x, target_y], tile_type])
     return chunk_data
 
+def draw_text(text, color, pos):
+    stuff = font.render(text, True, color)
+    display.blit(stuff, pos)
+font = pygame.font.SysFont('comicsansms', 20)
 
 WINDOWSIZE = (600, 400)
 HALFWINDOW = 150
@@ -134,6 +132,10 @@ while True:
 
     display.blit(grey, (player_rect.x-scroll[0], player_rect.y-scroll[1]))
 
+
+    mx, my = pygame.mouse.get_pos()
+    mx, my = ((mx+scroll[0]*2)//(TILESIZE*2)), (my+scroll[1]*2)//(TILESIZE*2)
+    draw_text(f'{mx}, {my}', 'black', (0, 0))
     tile_rects = []
     #render tiles
     for y in range(4):
@@ -182,6 +184,9 @@ while True:
                     playery_momentum = -5
             if event.key == K_r:
                 player_rect.bottomleft = (0, 0)
+            
+            if event.key == K_t:
+                moving_right = True
         
         elif event.type == KEYUP:
             if event.key == K_a:
