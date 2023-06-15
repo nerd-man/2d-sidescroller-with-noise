@@ -60,8 +60,8 @@ def generate_chunks(x, y):
                 if random.randint(1, 5) == 1:
                     tile_type = 3
             
-            if tile_type != 0:
-                chunk_data.append([[target_x, target_y], tile_type])
+            # if tile_type != 0:
+            chunk_data.append([[target_x, target_y], tile_type])
     return chunk_data
 
 def draw_text(text, color, pos):
@@ -100,6 +100,8 @@ tile_index = {
     4:water
 }
 
+selected_tile = 1
+
 TILESIZE = 16
 
 moving_left = False
@@ -135,7 +137,9 @@ while True:
 
     mx, my = pygame.mouse.get_pos()
     mx, my = ((mx+scroll[0]*2)//(TILESIZE*2)), (my+scroll[1]*2)//(TILESIZE*2)
-    draw_text(f'{mx}, {my}', 'black', (0, 0))
+    cx, cy = mx // CHUNK_SIZE, my // CHUNK_SIZE
+    # draw_text(f'{mx}, {my}', 'black', (0, 0))
+    # draw_text(f'{cx}, {cy}', 'black', (0, 20))
     tile_rects = []
     #render tiles
     for y in range(4):
@@ -146,10 +150,21 @@ while True:
             if target_chunk not in map:
                 map[target_chunk] = generate_chunks(target_x, target_y)
             for tile in map[target_chunk]:
-                display.blit(tile_index[tile[1]], (tile[0][0]*16-scroll[0], tile[0][1]*16-scroll[1]))
+                if tile[1] != 0:
+                    display.blit(tile_index[tile[1]], (tile[0][0]*16-scroll[0], tile[0][1]*16-scroll[1]))
                 if tile[1] in [1, 2]:
                     tile_rects.append(pygame.Rect(tile[0][0]*16, tile[0][1]*16, 16, 16))
     
+        for pos, tile in enumerate(map[f'{cx};{cy}']):
+            if tile[0] == [mx, my]:
+                if pygame.mouse.get_pressed()[0]:
+                    map[f'{cx};{cy}'][pos] = tile[0], selected_tile
+                elif pygame.mouse.get_pressed()[2]:
+                    map[f'{cx};{cy}'][pos] = tile[0], 0
+        if pygame.mouse.get_pressed(5)[4]:
+            if selected_tile < len(tile_index):
+                selected_tile += 1
+
     player_movement = [0, 0]
     if moving_right:
         player_movement[0] = 2
@@ -165,6 +180,8 @@ while True:
         playery_momentum = 1
     if collisions['top']:
         playery_momentum = 0
+    if collisions['right']:
+        playery_momentum = -5
 
     surf = pygame.transform.scale(display, WINDOWSIZE)
     screen.blit(surf, (0,0))
@@ -177,16 +194,23 @@ while True:
         elif event.type == KEYDOWN:
             if event.key == K_a:
                 moving_left = True
-            if event.key == K_d:
+            elif event.key == K_d:
                 moving_right = True
-            if event.key == K_SPACE:
+            elif event.key == K_SPACE:
                 if collisions['bottom']:
                     playery_momentum = -5
-            if event.key == K_r:
+            elif event.key == K_r:
                 player_rect.bottomleft = (0, 0)
             
-            if event.key == K_t:
+            elif event.key == K_t:
                 moving_right = True
+
+            elif event.key == K_LEFT:
+                if selected_tile > 1:
+                    selected_tile -= 1   
+            elif event.key == K_RIGHT:
+                if selected_tile < len(tile_index):
+                    selected_tile += 1
         
         elif event.type == KEYUP:
             if event.key == K_a:
