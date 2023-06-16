@@ -42,21 +42,18 @@ def generate_chunks(x, y):
             target_x = x * CHUNK_SIZE + x_pos
             target_y = y * CHUNK_SIZE + y_pos
             tile_type = 0
-            height = int(noise.pnoise1(target_x * 0.05, repeat=9999) * 5)
-            height2 = int(noise.pnoise1(target_x *0.1, repeat=9999) * 5)
-            height3 = int(noise.pnoise1(target_x *0.01, repeat=9999) * 5)
-            newheight = height + height2 + height3
+            height = int(noise.pnoise1(target_x * 0.1, repeat=9999) * 5)
             # Dirt
-            if target_y > 8 - newheight:
+            if target_y > 8 - height:
                 tile_type = 2
             # Grass
-            elif target_y == 8 - newheight:
+            elif target_y == 8 - height:
                 tile_type = 1
             # Water
-            elif 7 < target_y < 8 - newheight > 8:
+            elif 7 < target_y < 8 - height > 8:
                 tile_type = 4
             # Tall grass
-            elif target_y == 8 - newheight - 1:
+            elif target_y == 8 - height - 1:
                 if random.randint(1, 5) == 1:
                     tile_type = 3
             
@@ -92,17 +89,30 @@ dirt = pygame.image.load('images/tiles/dirtBlock.png')
 dirtb = pygame.image.load('images/tiles/dirtBack.png')
 tallgrass = pygame.image.load('images/tiles/tallGrass.png')
 water = pygame.image.load('images/tiles/Water.png')
+leaves = pygame.image.load('images/tiles/leafBlock.png')
+wood = pygame.image.load('images/tiles/woodBlock2.png')
 
 tile_index = {
     1:grass,
     2:dirt,
     3:tallgrass,
-    4:water
+    4:water,
+    5:leaves,
+    6:wood
 }
 
 selected_tile = 1
 
 TILESIZE = 16
+
+tree_mapping =[
+    [0,5,5,5,0],
+    [5,5,5,5,5],
+    [5,5,5,5,5],
+    [0,5,4,5,5],
+    [0,0,4,0,0],
+    [0,0,4,0,0]
+]
 
 moving_left = False
 moving_right = False
