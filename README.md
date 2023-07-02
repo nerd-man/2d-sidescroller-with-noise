@@ -1,7 +1,11 @@
 # Noise test
+
 A cool platformer that may or may not get grappling hooks and portals
 
 # To add
-Grappling hook;
-portals;
-enemies;
+
+- [ ] Trees
+- [ ] inventory
+- [ ] Grappling hook
+- [ ] portals
+- [ ] enemies
